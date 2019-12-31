@@ -1,6 +1,8 @@
 var express = require("express");
+require("dotenv").config();
 var router = express.Router();
 var http = require("https");
+var from_who = process.env.MAILGUN_WHO;
 
 /* GET home page. */
 router.get("/invitation", function(req, res, next) {
@@ -40,7 +42,31 @@ router.get("/invitation", function(req, res, next) {
 
   reu().then(a => {
     if (a != "") {
-      res.send("Sent");
+      res.redirect("/sendmail");
+    }
+  });
+});
+
+router.get("/sendmail", (req, res, next) => {
+  // var email = req.params.email;
+  bot.on("message", msg => {
+    if (msg.author == bot.user) {
+      return;
+    }
+    if (msg.content == "Hi") {
+      msg.channel
+        .createInvite({
+          maxAge: 10 * 60 * 1,
+          maxUses: 1,
+          inviter: bot.user
+        })
+        .then(invite => {
+          var link = `http://discord.gg/${invite.code}`;
+          msg.reply(link);
+          // msg.channel.send(link);
+          console.log(link);
+        })
+        .catch(console.error);
     }
   });
 });

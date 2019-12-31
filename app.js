@@ -7,11 +7,15 @@ var logger = require("morgan");
 require("dotenv").config();
 const Discord = require("discord.js");
 const bot = new Discord.Client();
+var Mailgun = require("mailgun-js");
 global.bot = bot;
 const TOKEN = process.env.TOKEN;
+var api_key = process.env.MAILGUN_API;
+var domain = process.env.MAILGUN_DOMAIN;
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-
+const mg = new Mailgun({ apiKey: api_key, domain: domain });
+global.mg = mg;
 bot.login(TOKEN);
 
 bot.on("ready", () => {
@@ -32,21 +36,22 @@ bot.on("message", msg => {
     } else {
       msg.reply("Please tag a valid user!");
     }
-  } else if (msg.content == "Hi") {
-    msg.channel
-      .createInvite({
-        maxAge: 10 * 60 * 1,
-        maxUses: 1,
-        inviter: bot.user
-      })
-      .then(invite => {
-        var link = `http://discord.gg/${invite.code}`;
-        msg.reply(link);
-        msg.channel.send(link);
-        console.log(link);
-      })
-      .catch(console.error);
   }
+  // else if (msg.content == "Hi") {
+  //   msg.channel
+  //     .createInvite({
+  //       maxAge: 10 * 60 * 1,
+  //       maxUses: 1,
+  //       inviter: bot.user
+  //     })
+  //     .then(invite => {
+  //       var link = `http://discord.gg/${invite.code}`;
+  //       msg.reply(link);
+  //       msg.channel.send(link);
+  //       console.log(link);
+  //     })
+  //     .catch(console.error);
+  // }
 });
 
 var app = express();
