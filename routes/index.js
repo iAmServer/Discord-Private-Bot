@@ -2,20 +2,28 @@ var express = require("express");
 require("dotenv").config();
 var router = express.Router();
 var http = require("https");
-var from_who = process.env.MAILGUN_WHO;
+const nodemailer = require("nodemailer");
+const nmgt = require("nodemailer-mailgun-transport");
+const mailgunAuth = {
+  auth: {
+    api_key: "e49edebd96e1db8412e882df128eb923-6f4beb0a-87e42fd8",
+    domain: "sandbox4bedbc59d3804deeb2fe4b167e1823c7.mailgun.org"
+  }
+};
+const smtpTransport = nodemailer.createTransport(nmgt(mailgunAuth));
 
 /* GET home page. */
-router.get("/invitation", function(req, res, next) {
+router.get("/invitation/:email", function(req, res, next) {
+  var email = req.params.email;
   var reu = async q => {
     var r = "";
     const data = JSON.stringify({
-      content: "Hi"
+      content: "Invitation link sent to " + email
     });
-
-    var options = {
+    https: var options = {
       host: "discordapp.com",
       path:
-        "/api/webhooks/661361289133555759/8d7ykDIs77h8KR_NpmKug-yTv8f9S00Dd2QYsvA6ca7Quqp6iCtTEKyhwN-1VpryaBiX",
+        "/api/webhooks/661510102439821335/I9AdYCGcmMkWOoV4k_MZke3Z0bZeSv8XQ4XOdpwnaQTliEdKbV9GB-wcVop068-QMcmG",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -23,9 +31,7 @@ router.get("/invitation", function(req, res, next) {
     };
 
     var requ = http.request(options, function(resp) {
-      console.log("STATUS: " + resp.statusCode);
       r = resp.statusCode;
-      // res.redirect("/sendmail");
     });
 
     requ.on("error", function(e) {
@@ -39,46 +45,43 @@ router.get("/invitation", function(req, res, next) {
   };
 
   reu().then(a => {
-    res.redirect("/sendmail");
+    res.redirect("/sendmail/" + email);
   });
 });
 
-router.get("/sendmail", (req, res, next) => {
-  // var email = req.params.email;
+// bot.channels.get("661243918633009213");
+router.get("/sendmail/:email", (req, res, next) => {
+  var email = req.params.email;
   bot.on("message", msg => {
     if (msg.author == bot.user) {
       return;
     }
-    if (msg.content == "Hi") {
+    if (msg.content == "Invitation link sent to " + email) {
       msg.channel
         .createInvite({
           maxAge: 10 * 60 * 1,
+          temporary: true,
           maxUses: 1,
           inviter: bot.user
         })
         .then(invite => {
           var link = `http://discord.gg/${invite.code}`;
-          // msg.reply(link);
-          var data = {
-            from: from_who,
-            to: "dayo7379@gmail.com",
+          const mailOptions = {
+            from: "dayo7379@gmail.com",
+            to: email,
             subject: "Invitation Link",
             html:
-              'Hello, This is not a plain-text email, I wanted to test some spicy Mailgun sauce in NodeJS! <a href="' +
+              '<h3>This is your invite link <a href="' +
               link +
-              '">Click here to add your email address to a mailing list</a>'
+              '">here</a></h3>'
           };
-          console.log(data);
-          mg.messages().send(data, function(err, body) {
-            if (err) {
-              console.log("got an error: ", err);
-              res.send("Can't send mail");
+          smtpTransport.sendMail(mailOptions, function(error, response) {
+            if (error) {
+              res.send("<h3>Mail Not Sent</h3>");
             }
-            console.log(link);
-            console.log(body);
-            res.send("submitted");
+
+            res.send("<h3>Mail Sent</h3>");
           });
-          // msg.channel.send(link);
         })
         .catch(console.error);
     }
