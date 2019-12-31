@@ -5,8 +5,8 @@ var exphbs = require("express-handlebars");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 require("dotenv").config();
-const Discord = require("discord.js");
-const bot = new Discord.Client();
+const { Client, RichEmbed } = require("discord.js");
+const bot = new Client();
 var Mailgun = require("mailgun-js");
 global.bot = bot;
 const TOKEN = process.env.TOKEN;
@@ -41,7 +41,11 @@ function processCommand(msg) {
   } else if (primaryCommand == "ban") {
     banCommand(arguments, msg);
   } else {
-    msg.channel.send("I don't understand the command. Try `!kick` or `!ban`");
+    const embed = new RichEmbed()
+      .setTitle("Error")
+      .setColor(0xff0000)
+      .setDescription("I don't understand the command. Try `!kick` or `!ban`");
+    msg.channel.send(embed);
   }
 }
 
@@ -71,11 +75,26 @@ function kickCommand(arguments, msg) {
 
 function banCommand(arguments, msg) {
   if (arguments.length > 0) {
-    if (msg.mentions.users.size) {
-      const taggedUser = msg.mentions.users.first();
-      msg.channel.send(`${taggedUser.username} banned`);
+    const user = msg.mentions.users.first();
+    if (user) {
+      const member = msg.guild.member(user);
+      if (member) {
+        member
+          .ban({
+            reason: "Trial user"
+          })
+          .then(() => {
+            msg.reply(`${user.tag} banned`);
+          })
+          .catch(err => {
+            msg.reply("I was unable to ban the member");
+            console.error(err);
+          });
+      } else {
+        msg.reply("That user isn't in this guild!");
+      }
     } else {
-      msg.reply("Please tag a valid user!");
+      msg.reply("You didn't mention the user to ban!");
     }
   }
 }
