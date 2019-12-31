@@ -78,6 +78,7 @@ router.get("/sendmail/:email", (req, res, next) => {
           smtpTransport.sendMail(mailOptions, function(error, response) {
             if (error) {
               res.send("<h3>Mail Not Sent</h3>");
+              console.log(error);
             }
 
             res.send("<h3>Mail Sent</h3>");
