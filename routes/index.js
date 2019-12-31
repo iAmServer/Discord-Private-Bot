@@ -25,9 +25,7 @@ router.get("/invitation", function(req, res, next) {
     var requ = http.request(options, function(resp) {
       console.log("STATUS: " + resp.statusCode);
       r = resp.statusCode;
-      resp.on("data", function(chunk) {
-        console.log(chunk);
-      });
+      // res.redirect("/sendmail");
     });
 
     requ.on("error", function(e) {
@@ -41,9 +39,7 @@ router.get("/invitation", function(req, res, next) {
   };
 
   reu().then(a => {
-    if (a != "") {
-      res.redirect("/sendmail");
-    }
+    res.redirect("/sendmail");
   });
 });
 
@@ -62,9 +58,27 @@ router.get("/sendmail", (req, res, next) => {
         })
         .then(invite => {
           var link = `http://discord.gg/${invite.code}`;
-          msg.reply(link);
+          // msg.reply(link);
+          var data = {
+            from: from_who,
+            to: "dayo7379@gmail.com",
+            subject: "Invitation Link",
+            html:
+              'Hello, This is not a plain-text email, I wanted to test some spicy Mailgun sauce in NodeJS! <a href="' +
+              link +
+              '">Click here to add your email address to a mailing list</a>'
+          };
+          console.log(data);
+          mg.messages().send(data, function(err, body) {
+            if (err) {
+              console.log("got an error: ", err);
+              res.send("Can't send mail");
+            }
+            console.log(link);
+            console.log(body);
+            res.send("submitted");
+          });
           // msg.channel.send(link);
-          console.log(link);
         })
         .catch(console.error);
     }
