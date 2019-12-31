@@ -49,7 +49,20 @@ function kickCommand(arguments, msg) {
   if (arguments.length > 0) {
     if (msg.mentions.users.size) {
       const taggedUser = msg.mentions.users.first();
-      msg.channel.send(`${taggedUser.username} kicked out`);
+      const member = msg.guild.member(taggedUser);
+      if (member) {
+        member
+          .kick("Optional reason that will display in the audit logs")
+          .then(() => {
+            msg.reply(`${taggedUser.tag} kicked out`);
+          })
+          .catch(err => {
+            msg.reply("I was unable to kick the member");
+            console.error(err);
+          });
+      } else {
+        msg.reply("That user isn't in this guild!");
+      }
     } else {
       msg.reply("Please tag a valid user!");
     }
