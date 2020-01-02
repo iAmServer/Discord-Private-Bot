@@ -20,10 +20,11 @@ router.get("/invitation/:email", function(req, res, next) {
     const data = JSON.stringify({
       content: "Invitation link sent to " + email
     });
-    https: var options = {
+
+    var options = {
       host: "discordapp.com",
       path:
-        "/api/webhooks/661510102439821335/I9AdYCGcmMkWOoV4k_MZke3Z0bZeSv8XQ4XOdpwnaQTliEdKbV9GB-wcVop068-QMcmG",
+        "/api/webhooks/662368129141178368/6hpnjR5E2ak2kjx62er7tIXSHpGfbzsREh5hipxLIpHerJdK2E9DoswZBGeeZi4zQlj4",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
