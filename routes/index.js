@@ -5,13 +5,13 @@ var http = require("https");
 const nodemailer = require("nodemailer");
 var mandrillTransport = require("nodemailer-mandrill-transport");
 const nmgt = require("nodemailer-mailgun-transport");
-const mailgunAuth = {
-  auth: {
-    api_key: "e49edebd96e1db8412e882df128eb923-6f4beb0a-87e42fd8",
-    domain: "sandbox4bedbc59d3804deeb2fe4b167e1823c7.mailgun.org"
-  }
-};
-const smtpTransport = nodemailer.createTransport(nmgt(mailgunAuth));
+// const mailgunAuth = {
+//   auth: {
+//     api_key: "e49edebd96e1db8412e882df128eb923-6f4beb0a-87e42fd8",
+//     domain: "sandbox4bedbc59d3804deeb2fe4b167e1823c7.mailgun.org"
+//   }
+// };
+// const smtpTransport = nodemailer.createTransport(nmgt(mailgunAuth));
 
 /* GET home page. */
 router.get("/invitation/:email", function(req, res, next) {
@@ -61,22 +61,30 @@ router.get("/invitation/:email", function(req, res, next) {
           })
           .then(invite => {
             var link = `http://discord.gg/${invite.code}`;
-            const mailOptions = {
-              from: "ambrownjessica@gmail.com",
+            var smtpTransport = nodemailer.createTransport(
+              mandrillTransport({
+                auth: {
+                  apiKey: "b0E4wY6SVAi7v3MgfBST_w"
+                }
+              })
+            );
+            let mailOptions = {
+              from: "wordpress@velocity-trading.com",
               to: email,
-              subject: "Invitation Link",
+              subject: "Discord Invitation - Velocity Trading",
               html:
                 '<h3>This is your invite link <a href="' +
                 link +
                 '">here</a></h3>'
             };
+
             smtpTransport.sendMail(mailOptions, function(error, response) {
               if (error) {
                 res.send("<h3>Mail Not Sent</h3>");
                 console.log(error);
               }
 
-              res.send("<h3>Mail Sent</h3>");
+              res.send("<h3>Mail Sent</h3>" + JSON.stringify(response));
             });
           })
           .catch(console.error);
