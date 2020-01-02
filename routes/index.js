@@ -64,7 +64,7 @@ router.get("/invitation/:email", function(req, res, next) {
             var smtpTransport = nodemailer.createTransport(
               mandrillTransport({
                 auth: {
-                  apiKey: "b0E4wY6SVAi7v3MgfBST_w"
+                  apiKey: "zE-obG88RJWpXn5aBB0Ydg"
                 }
               })
             );
