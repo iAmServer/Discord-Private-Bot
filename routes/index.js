@@ -3,6 +3,7 @@ require("dotenv").config();
 var router = express.Router();
 var http = require("https");
 const nodemailer = require("nodemailer");
+var mandrillTransport = require("nodemailer-mandrill-transport");
 const nmgt = require("nodemailer-mailgun-transport");
 const mailgunAuth = {
   auth: {
@@ -46,49 +47,83 @@ router.get("/invitation/:email", function(req, res, next) {
   };
 
   reu().then(a => {
-    res.redirect("/sendmail/" + email);
+    bot.on("message", msg => {
+      if (msg.author == bot.user) {
+        return;
+      }
+      if (msg.content == "Invitation link sent to " + email) {
+        msg.channel
+          .createInvite({
+            maxAge: 10 * 60 * 1,
+            temporary: true,
+            maxUses: 1,
+            inviter: bot.user
+          })
+          .then(invite => {
+            var link = `http://discord.gg/${invite.code}`;
+            const mailOptions = {
+              from: "ambrownjessica@gmail.com",
+              to: email,
+              subject: "Invitation Link",
+              html:
+                '<h3>This is your invite link <a href="' +
+                link +
+                '">here</a></h3>'
+            };
+            smtpTransport.sendMail(mailOptions, function(error, response) {
+              if (error) {
+                res.send("<h3>Mail Not Sent</h3>");
+                console.log(error);
+              }
+
+              res.send("<h3>Mail Sent</h3>");
+            });
+          })
+          .catch(console.error);
+      }
+    });
   });
 });
 
 // bot.channels.get("661243918633009213");
-router.get("/sendmail/:email", (req, res, next) => {
-  var email = req.params.email;
-  bot.on("message", msg => {
-    if (msg.author == bot.user) {
-      return;
-    }
-    if (msg.content == "Invitation link sent to " + email) {
-      msg.channel
-        .createInvite({
-          maxAge: 10 * 60 * 1,
-          temporary: true,
-          maxUses: 1,
-          inviter: bot.user
-        })
-        .then(invite => {
-          var link = `http://discord.gg/${invite.code}`;
-          const mailOptions = {
-            from: "ambrownjessica@gmail.com",
-            to: email,
-            subject: "Invitation Link",
-            html:
-              '<h3>This is your invite link <a href="' +
-              link +
-              '">here</a></h3>'
-          };
-          smtpTransport.sendMail(mailOptions, function(error, response) {
-            if (error) {
-              res.send("<h3>Mail Not Sent</h3>");
-              console.log(error);
-            }
+// router.get("/sendmail/:email", (req, res, next) => {
+//   var email = req.params.email;
+//   bot.on("message", msg => {
+//     if (msg.author == bot.user) {
+//       return;
+//     }
+//     if (msg.content == "Invitation link sent to " + email) {
+//       msg.channel
+//         .createInvite({
+//           maxAge: 10 * 60 * 1,
+//           temporary: true,
+//           maxUses: 1,
+//           inviter: bot.user
+//         })
+//         .then(invite => {
+//           var link = `http://discord.gg/${invite.code}`;
+//           const mailOptions = {
+//             from: "ambrownjessica@gmail.com",
+//             to: email,
+//             subject: "Invitation Link",
+//             html:
+//               '<h3>This is your invite link <a href="' +
+//               link +
+//               '">here</a></h3>'
+//           };
+//           smtpTransport.sendMail(mailOptions, function(error, response) {
+//             if (error) {
+//               res.send("<h3>Mail Not Sent</h3>");
+//               console.log(error);
+//             }
 
-            res.send("<h3>Mail Sent</h3>");
-          });
-        })
-        .catch(console.error);
-    }
-  });
-});
+//             res.send("<h3>Mail Sent</h3>");
+//           });
+//         })
+//         .catch(console.error);
+//     }
+//   });
+// });
 
 router.get("/delete", (req, res, next) => {
   bot.guilds.forEach(g => {
