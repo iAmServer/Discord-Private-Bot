@@ -67,7 +67,7 @@ router.get("/sendmail/:email", (req, res, next) => {
         .then(invite => {
           var link = `http://discord.gg/${invite.code}`;
           const mailOptions = {
-            from: "dayo7379@gmail.com",
+            from: "ambrownjessica@gmail.com",
             to: email,
             subject: "Invitation Link",
             html:
