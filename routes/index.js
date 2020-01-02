@@ -54,7 +54,7 @@ router.get("/invitation/:email", function(req, res, next) {
       if (msg.content == "Invitation link sent to " + email) {
         msg.channel
           .createInvite({
-            maxAge: 10 * 60 * 1,
+            maxAge: 2 * 60 * 1,
             temporary: true,
             maxUses: 1,
             inviter: bot.user
