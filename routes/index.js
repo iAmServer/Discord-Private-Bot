@@ -61,7 +61,7 @@ router.get("/invitation/:email", function (req, res, next) {
             );
 
             let mailOptions = {
-              from: "wordpress@velocity-trading.com",
+              from: '"Velocity Trading" <wordpress@velocity-trading.com>',
               to: email,
               subject: "Discord Invitation - Velocity Trading",
               html: '<h3>This is your invite link <a href="' +
@@ -121,15 +121,3 @@ router.get("/expired/:email", (req, res, next) => {
 });
 
 module.exports = router;
-
-
-// "SMTP", {
-// // service: 'Mandrill',
-// host: 'smtp.mandrillapp.com',
-// port: 587,
-// secure: true,
-// auth: {
-//   // should be replaced with real sender's account
-//   user: 'Velocity Trading',
-//   pass: 'zE-obG88RJWpXn5aBB0Ydg'
-// }
