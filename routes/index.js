@@ -64,9 +64,7 @@ router.get("/invitation/:email", function (req, res, next) {
               from: '"Velocity Trading" <wordpress@velocity-trading.com>',
               to: email,
               subject: "Discord Invitation - Velocity Trading",
-              html: '<h3>This is your invite link <a href="' +
-                link +
-                '">here</a></h3>'
+              html: mail(link, email)
             };
 
             smtpTransport.sendMail(mailOptions, function (error, response) {
@@ -119,5 +117,17 @@ router.get("/expired/:email", (req, res, next) => {
     res.send('done');
   });
 });
+
+function mail(link, email) {
+  var html = '<h3 class="margin:0; padding: 30; text-align: center; background-color: #f1f1f1; color: #FFF;">Dicsord Invitation</h3>';
+  html += '<div class="width: 100%; background-color: #FFF; padding; 5px">';
+  html += '<h4>Hello ' + email + ',</h4>';
+  html += '<p>Welcome again to velocity trading platform, click the button below to join the Discord server.</p>';
+  html += '<p class="color: red; padding: 10px; margin-top: 5px;"><b>NB: The invitation link will expiry in 2 minutes, which starts now </b></p>'
+  html += '<p><a href="' + link + '" class="padding: 20px 10px; background-color: #f3f3f3; color: #FFF; border-radius: 5px, margin 10px 0px;">Invitation</a></p>';
+  html += '<p>or click hrer ' + link + '</p>';
+
+  return html;
+}
 
 module.exports = router;
