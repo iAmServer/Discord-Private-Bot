@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 var mandrillTransport = require("nodemailer-mandrill-transport");
 
 /* GET home page. */
-router.get("/invitation/:email", function (req, res, next) {
+router.get("/invitation/:email", function(req, res, next) {
   var email = req.params.email;
   var reu = async q => {
     var r = "";
@@ -16,18 +16,19 @@ router.get("/invitation/:email", function (req, res, next) {
 
     var options = {
       host: "discordapp.com",
-      path: "/api/webhooks/662368129141178368/6hpnjR5E2ak2kjx62er7tIXSHpGfbzsREh5hipxLIpHerJdK2E9DoswZBGeeZi4zQlj4",
+      path:
+        "/api/webhooks/662368129141178368/6hpnjR5E2ak2kjx62er7tIXSHpGfbzsREh5hipxLIpHerJdK2E9DoswZBGeeZi4zQlj4",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       }
     };
 
-    var requ = http.request(options, function (resp) {
+    var requ = http.request(options, function(resp) {
       r = resp.statusCode;
     });
 
-    requ.on("error", function (e) {
+    requ.on("error", function(e) {
       console.log("problem with request: " + e.message);
     });
 
@@ -45,7 +46,7 @@ router.get("/invitation/:email", function (req, res, next) {
       if (msg.content == "Invitation link sent to " + email) {
         msg.channel
           .createInvite({
-            maxAge: 2 * 60 * 1,
+            maxAge: 60 * 60 * 2,
             temporary: true,
             maxUses: 1,
             inviter: bot.user
@@ -67,7 +68,7 @@ router.get("/invitation/:email", function (req, res, next) {
               html: mail(link, email)
             };
 
-            smtpTransport.sendMail(mailOptions, function (error, response) {
+            smtpTransport.sendMail(mailOptions, function(error, response) {
               if (error) {
                 res.send("<h3>Mail Not Sent</h3>" + JSON.stringify(error));
                 console.log(error);
@@ -92,18 +93,19 @@ router.get("/expired/:email", (req, res, next) => {
 
     var options = {
       host: "discordapp.com",
-      path: "/api/webhooks/662408614132187146/zG3eAWY_Ps2xo6LBEWNwJbt4O30q3fuMAj3jhL-zGuyYAzWj0EEjkzzEYPSbKLh3FZYC",
+      path:
+        "/api/webhooks/662408614132187146/zG3eAWY_Ps2xo6LBEWNwJbt4O30q3fuMAj3jhL-zGuyYAzWj0EEjkzzEYPSbKLh3FZYC",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       }
     };
 
-    var requ = http.request(options, function (resp) {
+    var requ = http.request(options, function(resp) {
       r = resp.statusCode;
     });
 
-    requ.on("error", function (e) {
+    requ.on("error", function(e) {
       console.log("problem with request: " + e.message);
     });
 
@@ -114,18 +116,24 @@ router.get("/expired/:email", (req, res, next) => {
   };
 
   reu().then(a => {
-    res.send('done');
+    res.send("done");
   });
 });
 
 function mail(link, email) {
-  var html = '<h3 class="margin:0; padding: 30; text-align: center; background-color: #f1f1f1; color: #FFF;">Dicsord Invitation</h3>';
+  var html =
+    '<h3 class="margin:0; padding: 30; text-align: center; background-color: #f1f1f1; color: #FFF;">Dicsord Invitation</h3>';
   html += '<div class="width: 100%; background-color: #FFF; padding; 5px">';
-  html += '<h4>Hello ' + email + ',</h4>';
-  html += '<p>Welcome again to velocity trading platform, click the button below to join the Discord server.</p>';
-  html += '<p class="color: red; padding: 10px; margin-top: 5px;"><b>NB: The invitation link will expiry in 2 minutes, which starts now </b></p>'
-  html += '<p><a href="' + link + '" class="padding: 20px 10px; background-color: #f3f3f3; color: #FFF; border-radius: 5px, margin 10px 0px;">Invitation</a></p>';
-  html += '<p>or click hrer ' + link + '</p>';
+  html += "<h4>Hello " + email + ",</h4>";
+  html +=
+    "<p>Welcome again to velocity trading platform, click the button below to join the Discord server.</p>";
+  html +=
+    '<p class="color: red; padding: 10px; margin-top: 5px;"><b>NB: The invitation link will expiry in 120 minutes, which starts now and it is a one time use invitation link</b></p>';
+  html +=
+    '<p><a href="' +
+    link +
+    '" class="padding: 20px 10px; background-color: #f3f3f3; color: #FFF; border-radius: 5px, margin 10px 0px;">Invitation</a></p>';
+  html += "<p>or click hrer " + link + "</p>";
 
   return html;
 }
