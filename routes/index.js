@@ -59,6 +59,7 @@ router.get("/invitation/:email", function (req, res, next) {
                 }
               })
             );
+
             let mailOptions = {
               from: "wordpress@velocity-trading.com",
               to: email,
@@ -70,11 +71,11 @@ router.get("/invitation/:email", function (req, res, next) {
 
             smtpTransport.sendMail(mailOptions, function (error, response) {
               if (error) {
-                res.send("<h3>Mail Not Sent</h3>");
+                res.send("<h3>Mail Not Sent</h3>" + JSON.stringify(error));
                 console.log(error);
+              } else {
+                res.send("<h3>Mail Sent</h3>" + JSON.stringify(response));
               }
-
-              res.send("<h3>Mail Sent</h3>" + JSON.stringify(response));
             });
           })
           .catch(console.error);
@@ -120,3 +121,15 @@ router.get("/expired/:email", (req, res, next) => {
 });
 
 module.exports = router;
+
+
+// "SMTP", {
+// // service: 'Mandrill',
+// host: 'smtp.mandrillapp.com',
+// port: 587,
+// secure: true,
+// auth: {
+//   // should be replaced with real sender's account
+//   user: 'Velocity Trading',
+//   pass: 'zE-obG88RJWpXn5aBB0Ydg'
+// }
