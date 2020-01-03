@@ -88,7 +88,7 @@ router.get("/expired/:email", (req, res, next) => {
   var reu = async q => {
     var r = "";
     const data = JSON.stringify({
-      content: email + "package is expired"
+      content: email + " package is expired"
     });
 
     var options = {
