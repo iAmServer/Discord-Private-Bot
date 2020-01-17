@@ -6,7 +6,13 @@ const nodemailer = require("nodemailer");
 var mandrillTransport = require("nodemailer-mandrill-transport");
 
 /* GET home page. */
-router.get("/invitation/:email", function(req, res, next) {
+router.get("/", function (req, res, next) {
+  res.json({
+    msg: true
+  });
+});
+
+router.get("/invitation/:email", function (req, res, next) {
   var email = req.params.email;
   var reu = async q => {
     var r = "";
@@ -16,19 +22,18 @@ router.get("/invitation/:email", function(req, res, next) {
 
     var options = {
       host: "discordapp.com",
-      path:
-        "/api/webhooks/662368129141178368/6hpnjR5E2ak2kjx62er7tIXSHpGfbzsREh5hipxLIpHerJdK2E9DoswZBGeeZi4zQlj4",
+      path: "/api/webhooks/662368129141178368/6hpnjR5E2ak2kjx62er7tIXSHpGfbzsREh5hipxLIpHerJdK2E9DoswZBGeeZi4zQlj4",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       }
     };
 
-    var requ = http.request(options, function(resp) {
+    var requ = http.request(options, function (resp) {
       r = resp.statusCode;
     });
 
-    requ.on("error", function(e) {
+    requ.on("error", function (e) {
       console.log("problem with request: " + e.message);
     });
 
@@ -68,7 +73,7 @@ router.get("/invitation/:email", function(req, res, next) {
               html: mail(link, email)
             };
 
-            smtpTransport.sendMail(mailOptions, function(error, response) {
+            smtpTransport.sendMail(mailOptions, function (error, response) {
               if (error) {
                 res.send("<h3>Mail Not Sent</h3>" + JSON.stringify(error));
                 console.log(error);
@@ -93,19 +98,18 @@ router.get("/expired/:email", (req, res, next) => {
 
     var options = {
       host: "discordapp.com",
-      path:
-        "/api/webhooks/662408614132187146/zG3eAWY_Ps2xo6LBEWNwJbt4O30q3fuMAj3jhL-zGuyYAzWj0EEjkzzEYPSbKLh3FZYC",
+      path: "/api/webhooks/662408614132187146/zG3eAWY_Ps2xo6LBEWNwJbt4O30q3fuMAj3jhL-zGuyYAzWj0EEjkzzEYPSbKLh3FZYC",
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       }
     };
 
-    var requ = http.request(options, function(resp) {
+    var requ = http.request(options, function (resp) {
       r = resp.statusCode;
     });
 
-    requ.on("error", function(e) {
+    requ.on("error", function (e) {
       console.log("problem with request: " + e.message);
     });
 
