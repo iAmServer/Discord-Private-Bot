@@ -26,17 +26,18 @@ bot.on("message", msg => {
   }
 
   if (msg.channel.type !== "dm") {
-    // if (msg.roles.some(role => role.name === 'admin')) {
+    if (!msg.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+      const embed = new RichEmbed()
+        .setTitle("Warning")
+        .setColor(0xff0000)
+        .setDescription("I will kick out instead");
+      msg.channel.send(embed);
+      return;
+    }
+
     if (msg.content.startsWith("-")) {
       processCommand(msg);
     }
-    // } else {
-    //   const embed = new RichEmbed()
-    //     .setTitle("Warning")
-    //     .setColor(0xff0000)
-    //     .setDescription("I will kick out instead");
-    //   msg.channel.send(embed);
-    // }
   } else {
     const embed = new RichEmbed()
       .setTitle("Error")
