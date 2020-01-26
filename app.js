@@ -25,16 +25,11 @@ bot.on("message", msg => {
     return;
   }
 
-  if (msg.channel.type !== "dm") {
-    if (!msg.member.hasPermission("ADMINISTRATOR")) {
-      const embed = new RichEmbed()
-        .setTitle("Warning")
-        .setColor(0xff0000)
-        .setDescription("I will kick you out instead");
-      msg.channel.send(embed);
-      return;
-    }
+  if (!msg.member.hasPermission("ADMINISTRATOR")) {
+    return;
+  }
 
+  if (msg.channel.type !== "dm") {
     if (msg.content.startsWith("-")) {
       processCommand(msg);
     }
