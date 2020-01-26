@@ -10,7 +10,6 @@ const {
   RichEmbed
 } = require("discord.js");
 const bot = new Client();
-var Mailgun = require("mailgun-js");
 global.bot = bot;
 const TOKEN = 'NjYxMjQ0MjczNzAxNjgzMjMw.Xg69nw.qotyI2HlyDAejuyhw28irbXuOMo';
 var indexRouter = require("./routes/index");
@@ -31,12 +30,18 @@ bot.on("message", msg => {
       if (msg.content.startsWith("-")) {
         processCommand(msg);
       }
+    } else {
+      const embed = new RichEmbed()
+        .setTitle("Warning")
+        .setColor(0xff0000)
+        .setDescription("I will kick out instead");
+      msg.channel.send(embed);
     }
   } else {
     const embed = new RichEmbed()
       .setTitle("Error")
       .setColor(0xff0000)
-      .setDescription("Sorry, I am a channel bot accessible");
+      .setDescription("Sorry, I am a channel bot");
     msg.channel.send(embed);
   }
 });
