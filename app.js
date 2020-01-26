@@ -26,7 +26,7 @@ bot.on("message", msg => {
   }
 
   if (msg.channel.type !== "dm") {
-    if (!msg.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+    if (!msg.member.hasPermission("ADMINISTRATOR")) {
       const embed = new RichEmbed()
         .setTitle("Warning")
         .setColor(0xff0000)
