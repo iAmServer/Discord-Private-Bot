@@ -30,7 +30,7 @@ bot.on("message", msg => {
       const embed = new RichEmbed()
         .setTitle("Warning")
         .setColor(0xff0000)
-        .setDescription("I will kick out instead");
+        .setDescription("I will kick you out instead");
       msg.channel.send(embed);
       return;
     }
