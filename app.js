@@ -25,11 +25,17 @@ bot.on("message", msg => {
   if (msg.author == bot.user) {
     return;
   }
-  if (msg.content === "ping") {
-    msg.reply("pong");
-    msg.channel.send("pong");
-  } else if (msg.content.startsWith("!")) {
-    processCommand(msg);
+
+  if (msg.channel.type !== "dm") {
+    if (msg.content.startsWith("-")) {
+      processCommand(msg);
+    }
+  } else {
+    const embed = new RichEmbed()
+      .setTitle("Error")
+      .setColor(0xff0000)
+      .setDescription("Sorry, I am a channel bot accessible");
+    msg.channel.send(embed);
   }
 });
 
