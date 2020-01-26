@@ -27,8 +27,10 @@ bot.on("message", msg => {
   }
 
   if (msg.channel.type !== "dm") {
-    if (msg.content.startsWith("-")) {
-      processCommand(msg);
+    if (msg.roles.some(role => role.name === 'admin')) {
+      if (msg.content.startsWith("-")) {
+        processCommand(msg);
+      }
     }
   } else {
     const embed = new RichEmbed()
