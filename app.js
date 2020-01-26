@@ -55,7 +55,7 @@ function processCommand(msg) {
     const embed = new RichEmbed()
       .setTitle("Error")
       .setColor(0xff0000)
-      .setDescription("I don't understand the command. Try `!kick` or `!ban`");
+      .setDescription("I don't understand the command. Try `-kick` or `-ban`");
     msg.channel.send(embed);
   }
 }
