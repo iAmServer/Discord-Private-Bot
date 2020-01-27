@@ -54,6 +54,7 @@ router.get("/invitation/:email", function (req, res, next) {
             maxAge: 60 * 60 * 2,
             temporary: true,
             maxUses: 1,
+            unique: true,
             inviter: bot.user
           })
           .then(invite => {
