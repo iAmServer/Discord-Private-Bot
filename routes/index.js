@@ -76,10 +76,9 @@ router.get("/invitation/:email", function (req, res, next) {
 
             smtpTransport.sendMail(mailOptions, function (error, response) {
               if (error) {
-                res.send("<h3>Mail Not Sent</h3>" + JSON.stringify(error));
-                console.log(error);
+                res.end("<h3>Mail Not Sent</h3>" + JSON.stringify(error));
               } else {
-                res.send("<h3>Mail Sent</h3>" + JSON.stringify(response));
+                res.end("<h3>Mail Sent</h3>" + JSON.stringify(response));
               }
             });
           })
@@ -121,7 +120,7 @@ router.get("/expired/:email", (req, res, next) => {
   };
 
   reu().then(a => {
-    res.send("done");
+    res.end("done");
   });
 });
 

@@ -25,8 +25,10 @@ bot.on("message", msg => {
     return;
   }
 
-  if (!msg.member.hasPermission("ADMINISTRATOR")) {
-    return;
+  if (msg.member !== null) {
+    if (!msg.member.hasPermission("ADMINISTRATOR") && msg.author.id !== '662368129141178368' && msg.author.id !== '662408614132187146') {
+      return;
+    }
   }
 
   if (msg.channel.type !== "dm") {
